@@ -1,0 +1,24 @@
+{
+  "name": "inverte-api",
+  "version": "1.0.0",
+  "description": "This is the micro-repo of the InVerte Back-end API. It will also hold the front-end react app to display the data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"**/**/*.{js,jsx}\" --quiet",
+    "lint": "eslint \"**/**/*.{js,jsx}\" --quiet"
+  },
+  "type": "module",
+  "keywords": [
+    "API",
+    "IoT"
+  ],
+  "author": "InVerte Dev Team V.1 (JYD)",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.0.0",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {}
+}
