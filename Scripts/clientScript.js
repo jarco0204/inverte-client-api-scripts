@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-const path = 'Data/cheese.json';
+const path = './cheese.json';
 
 const main = () => {
     let data = prepareData();
