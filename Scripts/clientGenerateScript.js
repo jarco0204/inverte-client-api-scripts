@@ -1,9 +1,9 @@
-import * as fs from 'fs';
+import * as fs from 'fs'; // find better way
 const path = './cheese.json';
 
 const main = () => {
     let data = prepareData();
-    console.log(data);
+
     fs.writeFileSync(path, JSON.stringify(data), 'utf-8', function (err) {
         if (err) throw err;
     });

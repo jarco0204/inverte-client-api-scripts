@@ -16,6 +16,7 @@
   "author": "InVerte Dev Team V.1 (JYD)",
   "license": "ISC",
   "devDependencies": {
+    "axios": "^0.21.1",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.0.0",
     "prettier": "^2.2.1"

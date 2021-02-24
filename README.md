@@ -4,6 +4,16 @@
 
 • The root directory contains a node package that installs eslint and prettier.
 • API and Client directories are their own npm package.
+• Scripts directory contains the generated test data for this iterations
+
+# Root directory packages
+
+• Axios for send request to API
+
+# How to run the scripts
+
+1. cd Scripts
+2. node "nameOfScript".js
 
  <!--- Comment here: 
  If you already configure and added your require package for this project in package.json (which in this case already did, check package.json and you will see eslint and prettier is in the devDependencies). 
