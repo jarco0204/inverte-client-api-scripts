@@ -6,6 +6,12 @@ const app = express();
 //Middleware
 app.use(express.json()); // support json encoded bodies
 
+// Routes
+app.get('/test', (req, res, next) => {
+    res.json({ message: 'Elpepe' });
+    next();
+});
+
 // Accepting requests
 export const start = async () => {
     const port = 3000;
