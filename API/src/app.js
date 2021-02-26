@@ -1,4 +1,5 @@
 import express from 'express';
+import ingredientRouter from './Routers/Ingredient.js';
 
 //Instantiation of main app
 const app = express();
@@ -7,10 +8,7 @@ const app = express();
 app.use(express.json()); // support json encoded bodies
 
 // Routes
-app.get('/test', (req, res, next) => {
-    res.json({ message: 'Elpepe' });
-    next();
-});
+app.use('/ingredient', ingredientRouter);
 
 // Accepting requests
 export const start = async () => {
