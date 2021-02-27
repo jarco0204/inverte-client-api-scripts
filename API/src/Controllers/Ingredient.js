@@ -1,5 +1,6 @@
 //Controller that handles GET requests to /ingredient/
 // @args req.userID
+
 // @returns JSON object containing the tracked ingredients
 export const getTrackedIngredients = (req, res) => {
     // NOTE need to validate that the user exists
