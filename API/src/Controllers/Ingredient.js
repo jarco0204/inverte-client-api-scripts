@@ -19,5 +19,10 @@ export const saveReadingToDB = (req, res) => {
     //Create a function that can verify if the requests has an userid and if it is valid
     console.log(req);
     //Next we have to add it to db
+    // NOTE : Should we create a db connection for each request or just have one open connection and then return db
+    // let dbConnection = getDb();
+    // dbConnection.
+
+    //Send
     res.status(202).send({ message: 'Weight successfully added to the DB.' });
 };
