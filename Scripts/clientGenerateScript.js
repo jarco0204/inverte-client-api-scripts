@@ -32,6 +32,7 @@ const prepareData = () => {
         tempObj.push({
             weight: initialWeight,
             time: createTime(i),
+            userId: 'johanArcos_5680',
             weightFluc: fluct,
             accuracyWeight: accuracy,
         });

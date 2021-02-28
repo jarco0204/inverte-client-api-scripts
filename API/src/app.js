@@ -6,6 +6,7 @@ const app = express();
 
 //Middleware
 app.use(express.json()); // support json encoded bodies
+// app.use(express.urlencoded()); // support json encoded bodies
 
 // Routes
 app.use('/ingredient', ingredientRouter);
