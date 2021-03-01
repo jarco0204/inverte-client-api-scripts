@@ -1,3 +1,4 @@
+//Utils function
 const _openDbCollection = async (db, collectionName) => {
     try {
         // console.log(db);
@@ -6,6 +7,7 @@ const _openDbCollection = async (db, collectionName) => {
         console.log(err);
     }
 };
+
 /**
  * The class Ingredient that handles operations to the db.
  * Some methods are static since it is not required to create a new object.
@@ -34,6 +36,64 @@ export class Ingredient {
             userID: this.userId,
         };
     }
+    /**
+     * This is a static function that adds the id of a tracked ingredient to the array of tracked ingredients.
+     * Consult with Dr.Soares some matters.
+     * @param {*} dbConnection
+     * @param {*} colName
+     * @param {*} ingredientID
+     */
+    static async addIngredientID(dbConnection, colName, ingredientID) {
+        let dbCol;
+        // first section, trying to get the db connection
+        try {
+            dbCol = await _openDbCollection(dbConnection, colName);
+        } catch (err) {
+            console.log('Cannot connect to DB collection');
+            throw err; //Will error be handled by catch() at controller
+        }
+        // Second section, find if the array exists or not
+        let tracked;
+        try {
+            tracked = await dbCol.findOne({
+                trackedIngs: { $exists: true },
+            });
+            console.log(tracked);
+            if (tracked) {
+                //If the above query returns an object
+                tracked.trackedIngs.push(ingredientID); //Need to add a mechanism to prevent same items to be added
+            } else {
+                //Since this document has not been created, go ahead create it and return
+                return new Promise(function (resolve, reject) {
+                    dbCol.insertOne(
+                        { trackedIngs: [ingredientID] },
+                        (err, obj) => {
+                            if (err) reject(err);
+                            resolve(obj);
+                        },
+                    );
+                });
+            }
+            //NOTE: in order to prevent getting a null object, you need to add this object before anything else
+        } catch (err) {
+            console.log(
+                'An error happened while retrieving the trackedIDs array',
+            );
+            throw err; //Will error be handled by catch() at controller
+        }
+
+        return new Promise(function (resolve, reject) {
+            dbCol.updateOne(
+                { _id: tracked._id },
+                { $set: { trackedIngs: tracked.trackedIngs } },
+                (err, obj) => {
+                    if (err) reject(err);
+                    console.log('Successfully added an ingredient');
+                    resolve(obj);
+                },
+            );
+        });
+    }
 
     /**
      * Adds the ingredient and weight data from the Class object to the db.
@@ -43,6 +103,8 @@ export class Ingredient {
      */
 
     async addWeightReadingDb(dbConnection, dbCollection) {
+        //Nested private function
+
         let obj = this;
         let dbCol;
         // first section, trying to get the db connection
@@ -50,9 +112,16 @@ export class Ingredient {
             dbCol = await _openDbCollection(dbConnection, dbCollection);
         } catch (err) {
             console.log('Cannot connect to DB collection');
-            throw err;
+            throw err; //Will error be handled by catch() at controller
         }
-        // Second section
+        //Second section, adds a list of the tracked ingredients to faciliate GET requests
+        // try {
+        //     _addIngredientIDToList(dbCol, this.ingId);
+        // } catch (err) {
+        //     console.log('Error while adding tracked ingredient id');
+        //     throw err;
+        // }
+        // Third section
         return new Promise(function (resolve, reject) {
             dbCol.insertOne(obj.getDataInJSON(), (err, obj) => {
                 if (err) reject(err);
@@ -61,4 +130,24 @@ export class Ingredient {
             });
         });
     }
+
+    /**
+     * Static method to retrieve the tracked ingredients id of a user
+     *
+     */
+    // static async getIngredientsIds(dbConnection, dbCollection) {
+    //     //Note this code is repeated from above
+    //     let obj = this;
+    //     let dbCol;
+    //     // first section, trying to get the db connection
+    //     try {
+    //         dbCol = await _openDbCollection(dbConnection, dbCollection);
+    //     } catch (err) {
+    //         console.log('Cannot connect to DB collection');
+    //         throw err; //Will error be handled by catch() at controller
+    //     }
+    //     return new Promise((resolve, reject) => {
+    //         dbCol.find();
+    //     });
+    // }
 }

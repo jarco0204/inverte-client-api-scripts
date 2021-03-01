@@ -1,26 +1,52 @@
 import { Ingredient } from '../Models/Ingredient.js';
 
-//Controller that handles GET requests to /ingredient/
-// @args req.userId
-// @returns JSON object containing the tracked ingredients
+/**
+ * Handles POST requests to /ingredient
+ *  Adds an ingredient id to the list of tracked ingredients of a user
+ * @param {*} req
+ * @param {*} res
+ */
+export const addIngredient = (req, res) => {
+    // DESIGN CHOICE: the db collection will be its own userid
+    let collectionName = req.body.userId;
+
+    //Static method to add ingredients id
+    Ingredient.addIngredientID(req.db, collectionName, req.body.trackedIngID)
+        .then((result) => {
+            res.status(202).send({ obj: result, message: 'you got it' });
+        })
+        .catch((err) => {
+            res.status(404).send({ obj: err, message: 'It failed to add ' });
+        });
+};
+
+/**
+ *  Controller that handles GET requests to /ingredient/
+ * It returns a list of all tracked ingredients Ids.
+ * In order to optimize such query,it might be worthwhile to add the tracked ingredient after each call to saveReadingToDB. Look into this matter.
+ * @param {*} req contains req.body.userId
+ * @param {*} res returns the array of tracked ingredients
+ */
 export const getTrackedIngredients = (req, res) => {
-    // NOTE need to validate that the user exists
-    // Right not is only checking that this id is being passed
-    // console.log(req.body.userId);
     if (req.body.userId) {
         res.status(202).send({ message: 'SUCCESS' });
     } else {
         res.status(404).send({ message: 'Invalid UserId' });
     }
+    //Static class method
 };
 
-// This is a controller that handles posts requests to /ingredient/real-time
-// In a near fututure, a web-socket will be used
-// The db connection is opened in the controller, the specific db collection is opened in Model
+/**
+ * Controller that handles posts requests to /ingredient/real-time
+ * In a near fututure, a web-socket will be used.
+ * The db connection is opened in App.js and the collection is looked in the model.
+ * @param req contains the data sent in req.body and db connection in req.db
+ * @param res answers back the status of the request
+ */
 export const saveReadingToDB = async (req, res) => {
     //Create a function that can verify if the requests has an userid and if it is valid
-    // console.log(req.body);
 
+    //Create Ingredient object and call its add method
     let ingredient = new Ingredient(
         req.body.ingId,
         req.body.weight,
@@ -30,9 +56,8 @@ export const saveReadingToDB = async (req, res) => {
         req.body.userId,
     );
 
-    // This next section should retrieve the user's collection based on their id
+    // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
-    //Passing the db as middleware
     ingredient
         .addWeightReadingDb(req.db, collectionName)
         .then(() => {
@@ -42,6 +67,7 @@ export const saveReadingToDB = async (req, res) => {
             });
         })
         .catch(() => {
-            res.status(404).send({ messge: 'Internal server error' });
+            //Handles rejects
+            res.status(404).send({ message: 'Internal server error' });
         });
 };
