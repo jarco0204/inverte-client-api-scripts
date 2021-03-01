@@ -30,6 +30,7 @@ const prepareData = () => {
             accuracy = '++';
         }
         tempObj.push({
+            ingId: 'CH01',
             weight: initialWeight,
             time: createTime(i),
             userId: 'johanArcos_5680',

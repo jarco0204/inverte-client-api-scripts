@@ -6,12 +6,13 @@ import { connectToDB, closeDBConnection } from './Utils/db.js';
 //Instantiation of main app
 const app = express();
 let server;
+let mongoDb;
 
 //DB initialization
 //Gurantees that the connection is opened, once the server is started
 async function loadDBClient() {
     try {
-        await connectToDB();
+        mongoDb = await connectToDB();
     } catch (err) {
         throw new Error('Could not connect to the Mongo DB');
     }
@@ -20,7 +21,12 @@ loadDBClient();
 
 //Middleware
 app.use(express.json()); // support json encoded bodies
-// app.use(express.urlencoded()); // support json encoded bodies
+// This method is executed every time a new request arrives.
+// We add the variable db to the request object, to be retrieved in the route req object
+app.use((req, res, next) => {
+    req.db = mongoDb;
+    next();
+});
 
 // Routes
 app.use('/ingredient', ingredientRouter);
