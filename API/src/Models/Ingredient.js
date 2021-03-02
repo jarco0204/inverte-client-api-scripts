@@ -46,14 +46,22 @@ export class Ingredient {
         }
         // Second section, find if the array exists or not
         let tracked;
+        let modified = true;
         try {
             tracked = await dbCol.findOne({
                 _id: 0,
             });
             // console.log(tracked);
+
             if (tracked) {
-                //If the above query returns an object
-                tracked.trackedIngs.push(ingredientID); //Need to add a mechanism to prevent same items to be added
+                //Loop to prevent repeated items to be inserted
+                for (let i = 0; i < tracked.trackedIngs.length; i++) {
+                    if (tracked.trackedIngs[i] == ingredientID) {
+                        modified = false; //the object is already in the list
+                        break;
+                    }
+                }
+                tracked.trackedIngs.push(ingredientID);
             } else {
                 //Since this document has not been created, go ahead create it and return
                 return new Promise(function (resolve, reject) {
@@ -75,15 +83,22 @@ export class Ingredient {
         }
 
         return new Promise(function (resolve, reject) {
-            dbCol.updateOne(
-                { _id: tracked._id },
-                { $set: { trackedIngs: tracked.trackedIngs } },
-                (err, obj) => {
-                    if (err) reject(err);
-                    console.log('Successfully added an ingredient');
-                    resolve(obj);
-                },
-            );
+            if (modified) {
+                dbCol.updateOne(
+                    { _id: tracked._id },
+                    { $set: { trackedIngs: tracked.trackedIngs } },
+                    (err, obj) => {
+                        if (err) reject(err);
+                        console.log('Successfully added an ingredient');
+                        resolve(obj);
+                    },
+                );
+            } else {
+                console.log(
+                    "IngredientID was not added because it's already in the array. ",
+                );
+                reject();
+            }
         });
     }
     /**
