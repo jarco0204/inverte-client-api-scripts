@@ -1,6 +1,6 @@
 import { Ingredient } from '../Models/Ingredient.js';
 
-// // REQUESTS to /ingredient
+// // REQUESTS to /ingredient/
 /**
  * Handles POST requests to /ingredient/
  *  Adds an ingredient id to the list of tracked ingredients of a user
@@ -78,19 +78,26 @@ export const addUpdateIngredientInfo = (req, res) => {
         });
 };
 /**
- *  Controller that handles GET requests to /ingredients/
- * It returns a list of all tracked ingredients Ids.
- * In order to optimize such query,it might be worthwhile to add the tracked ingredient after each call to saveReadingToDB. Look into this matter.
- * @param {*} req contains req.body.userId
- * @param {*} res returns the array of tracked ingredients
+ *
+ * @param {*} req
+ * @param {*} res
  */
-export const getTrackedIngredientsIDs = (req, res) => {
-    if (req.body.userId) {
-        res.status(202).send({ message: 'SUCCESS' });
-    } else {
-        res.status(404).send({ message: 'Invalid UserId' });
-    }
-    //Static class method
+export const getIngredientInfo = (req, res) => {
+    let collectionName = req.body.userId;
+    let ingredientID = req.body.trackedIngID;
+    Ingredient.getIngredientInfo(req.db, collectionName, ingredientID)
+        .then((result) => {
+            res.status(202).send({
+                obj: result,
+                message: 'Ingredient Information Successfully retrieved',
+            });
+        })
+        .catch((err) => {
+            res.status(404).send({
+                obj: err,
+                message: 'Failed to get ingredient info',
+            });
+        });
 };
 
 /**

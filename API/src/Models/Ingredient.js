@@ -229,6 +229,44 @@ export class Ingredient {
             }
         });
     }
+    /**
+     * Handles GET requests to /ingredient/info
+     * @param {*} dbConnection
+     * @param {*} dbCollection
+     */
+    static async getIngredientInfo(dbConnection, dbCollection, ingredientID) {
+        let dbCol;
+        // first section, trying to get the db connection
+        try {
+            dbCol = await openDbCollection(dbConnection, dbCollection);
+        } catch (err) {
+            console.log('Cannot connect to DB collection');
+            throw err; //Will error be handled by catch() at controller
+        }
+
+        //Next section
+        return new Promise(function (resolve, reject) {
+            dbCol.findOne(
+                {
+                    _id: 0,
+                },
+                (err, obj) => {
+                    if (err) reject(err);
+                    try {
+                        //Need to check if the id exists or not
+                        let dataKey = ingredientID + '_data'; // This is how data is added
+                        console.log(
+                            'Successfully retrieved individual ingredient data',
+                        );
+                        resolve(obj[dataKey]);
+                    } catch (err) {
+                        console.log('Invalid key in getIngredientInfo');
+                        reject(err);
+                    }
+                },
+            );
+        });
+    }
 
     /**
      * Adds the ingredient and weight data from the Class object to the db.
