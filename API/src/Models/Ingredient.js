@@ -1,13 +1,4 @@
-//Utils function
-const _openDbCollection = async (db, collectionName) => {
-    try {
-        // console.log(db);
-        return await db.collection(collectionName);
-    } catch (err) {
-        console.log(err);
-    }
-};
-
+import { openDbCollection } from '../Utils/db.js';
 /**
  * The class Ingredient that handles operations to the db.
  * Some methods are static since it is not required to create a new object.
@@ -46,8 +37,9 @@ export class Ingredient {
     static async addIngredientID(dbConnection, colName, ingredientID) {
         let dbCol;
         // first section, trying to get the db connection
+        // Consult if this try/catch is unnessary
         try {
-            dbCol = await _openDbCollection(dbConnection, colName);
+            dbCol = await openDbCollection(dbConnection, colName);
         } catch (err) {
             console.log('Cannot connect to DB collection');
             throw err; //Will error be handled by catch() at controller
@@ -104,7 +96,7 @@ export class Ingredient {
         let dbCol;
         // first section, trying to get the db connection
         try {
-            dbCol = await _openDbCollection(dbConnection, dbCollection);
+            dbCol = await openDbCollection(dbConnection, dbCollection);
         } catch (err) {
             console.log('Cannot connect to DB collection');
             throw err; //Will error be handled by catch() at controller
@@ -172,7 +164,7 @@ export class Ingredient {
         let dbCol;
         // first section, trying to get the db connection
         try {
-            dbCol = await _openDbCollection(dbConnection, dbCollection);
+            dbCol = await openDbCollection(dbConnection, dbCollection);
         } catch (err) {
             console.log('Cannot connect to DB collection');
             throw err; //Will error be handled by catch() at controller
@@ -204,7 +196,7 @@ export class Ingredient {
         let dbCol;
         // first section, trying to get the db connection
         try {
-            dbCol = await _openDbCollection(dbConnection, dbCollection);
+            dbCol = await openDbCollection(dbConnection, dbCollection);
         } catch (err) {
             console.log('Cannot connect to DB collection');
             throw err; //Will error be handled by catch() at controller
