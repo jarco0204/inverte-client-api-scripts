@@ -48,7 +48,7 @@ export class Ingredient {
         let tracked;
         try {
             tracked = await dbCol.findOne({
-                trackedIngs: { $exists: true },
+                _id: 0,
             });
             // console.log(tracked);
             if (tracked) {
@@ -57,8 +57,9 @@ export class Ingredient {
             } else {
                 //Since this document has not been created, go ahead create it and return
                 return new Promise(function (resolve, reject) {
+                    // In Each user's collection the _id=0 contains all the info about
                     dbCol.insertOne(
-                        { trackedIngs: [ingredientID] },
+                        { _id: 0, trackedIngs: [ingredientID] },
                         (err, obj) => {
                             if (err) reject(err);
                             resolve(obj);
@@ -66,7 +67,6 @@ export class Ingredient {
                     );
                 });
             }
-            //NOTE: in order to prevent getting a null object, you need to add this object before anything else
         } catch (err) {
             console.log(
                 'An error happened while retrieving the trackedIDs array',
@@ -87,7 +87,7 @@ export class Ingredient {
         });
     }
     /**
-     * Static method to delete a tracked ingredient
+     * Static method to delete a tracked ingredientID
      * @param {*} dbConnection
      * @param {*} dbCollection
      * @param {*} IngredientID
@@ -107,7 +107,7 @@ export class Ingredient {
         let deleted; //Tracks to see if an item has been deleted or not
         try {
             tracked = await dbCol.findOne({
-                trackedIngs: { $exists: true },
+                _id: 0,
             });
             // console.log(tracked);
             if (tracked) {
@@ -149,6 +149,64 @@ export class Ingredient {
             );
         });
     }
+    /**
+     * Static method that adds the ingredient info to the database based on its ID
+     * @param {*} dbConnection
+     * @param {*} dbCollection
+     * @param {*} ingredientID
+     */
+    static async addIngredientInfo(dbConnection, dbCollection, ingredientID) {
+        let dbCol;
+        // first section, trying to get the db connection
+        try {
+            dbCol = await openDbCollection(dbConnection, dbCollection);
+        } catch (err) {
+            console.log('Cannot connect to DB collection');
+            throw err; //Will error be handled by catch() at controller
+        }
+
+        //Section that checks to see if ingredientID exists
+        let trackedIDs;
+        let found;
+        try {
+            trackedIDs = await dbCol.findOne({
+                _id: 0,
+            });
+            // console.log(tracked);
+            if (trackedIDs) {
+                //There is not an else since this method should only execute when an id has been added
+                for (let i = 0; i < trackedIDs.trackedIngs.length; i++) {
+                    if (trackedIDs.trackedIngs[i] == ingredientID) {
+                        found = true;
+                        break; // No need to keep going
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(
+                'An error happened while retrieving the trackedIDs array',
+            );
+            throw err; //Will error be handled by catch() at controller
+        }
+        //Return the promise based on the result of found
+        return new Promise(function (resolve, reject) {
+            if (found) {
+                let addKey = ingredientID + '_data'; // Dynamically creating key; NOTE it cannot contain .
+                dbCol.updateOne(
+                    { _id: 0 },
+                    { $set: { [addKey]: 'test1' } },
+                    (err, obj) => {
+                        if (err) reject(err);
+                        console.log('Ingredient data successfully added');
+                        resolve(obj);
+                    },
+                );
+            } else {
+                console.log('The ID has not been created yet');
+                reject();
+            }
+        });
+    }
 
     /**
      * Adds the ingredient and weight data from the Class object to the db.
@@ -158,8 +216,6 @@ export class Ingredient {
      */
 
     async addWeightReadingDb(dbConnection, dbCollection) {
-        //Nested private function
-
         let obj = this;
         let dbCol;
         // first section, trying to get the db connection

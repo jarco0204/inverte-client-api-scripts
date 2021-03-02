@@ -4,7 +4,7 @@ import { Ingredient } from '../Models/Ingredient.js';
  * @param {*} req.body.userid & req.db
  * @param {*} res.send()
  */
-export const getAllIngredients = (req, res) => {
+export const getAllIngredientsIDs = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
     //Static method to add ingredients id

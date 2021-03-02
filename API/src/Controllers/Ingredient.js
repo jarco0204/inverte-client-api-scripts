@@ -2,12 +2,12 @@ import { Ingredient } from '../Models/Ingredient.js';
 
 // // REQUESTS to /ingredient
 /**
- * Handles POST requests to /ingredient
+ * Handles POST requests to /ingredient/
  *  Adds an ingredient id to the list of tracked ingredients of a user
  * @param {*} req
  * @param {*} res
  */
-export const addIngredient = (req, res) => {
+export const addIngredientID = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
 
@@ -22,11 +22,12 @@ export const addIngredient = (req, res) => {
 };
 
 /**
+ * Handles DELETE requests to /ingredient/
  * Delete a tracked ingredient from the list of tracked ingredients
  * @param {*} req.body.userid & req.body.trackedIngID & req.db
  * @param {*} res.send()
  */
-export const deleteIngredient = (req, res) => {
+export const deleteIngredientID = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
     //Static method to add ingredients id
@@ -44,15 +45,38 @@ export const deleteIngredient = (req, res) => {
             });
         });
 };
-
 /**
- *  Controller that handles GET requests to /ingredient/
+ * Handles POST requests to /ingredient/info
+ * Adds the info of a tracked ingredient to the database
+ * @param {*} req
+ * @param {*} res
+ */
+export const addIngredientInfo = (req, res) => {
+    // DESIGN CHOICE: the db collection will be its own userid
+    let collectionName = req.body.userId;
+    //Static method to add ingredient info
+    Ingredient.addIngredientInfo(req.db, collectionName, req.body.trackedIngID)
+        .then((result) => {
+            res.status(202).send({
+                obj: result,
+                message: 'Ingredient Information Successfully added',
+            });
+        })
+        .catch((err) => {
+            res.status(404).send({
+                obj: err,
+                message: 'Failed to add ingredient info',
+            });
+        });
+};
+/**
+ *  Controller that handles GET requests to /ingredients/
  * It returns a list of all tracked ingredients Ids.
  * In order to optimize such query,it might be worthwhile to add the tracked ingredient after each call to saveReadingToDB. Look into this matter.
  * @param {*} req contains req.body.userId
  * @param {*} res returns the array of tracked ingredients
  */
-export const getTrackedIngredients = (req, res) => {
+export const getTrackedIngredientsIDs = (req, res) => {
     if (req.body.userId) {
         res.status(202).send({ message: 'SUCCESS' });
     } else {
