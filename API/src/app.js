@@ -1,5 +1,6 @@
 import express from 'express';
 import ingredientRouter from './Routers/Ingredient.js';
+import ingredientsRouter from './Routers/Ingredients.js';
 import { connectToDB, closeDBConnection } from './Utils/db.js';
 // import mongo from 'mongodb';
 
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/ingredient', ingredientRouter);
+app.use('/ingredients', ingredientsRouter);
 
 // Properly Close the DB connection before closing the server
 process.on('SIGINT', () => {

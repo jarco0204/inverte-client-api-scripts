@@ -58,7 +58,7 @@ export class Ingredient {
             tracked = await dbCol.findOne({
                 trackedIngs: { $exists: true },
             });
-            console.log(tracked);
+            // console.log(tracked);
             if (tracked) {
                 //If the above query returns an object
                 tracked.trackedIngs.push(ingredientID); //Need to add a mechanism to prevent same items to be added
@@ -112,16 +112,18 @@ export class Ingredient {
 
         // This section looks for the element and deletes it
         let tracked;
+        let deleted; //Tracks to see if an item has been deleted or not
         try {
             tracked = await dbCol.findOne({
                 trackedIngs: { $exists: true },
             });
-            console.log(tracked);
+            // console.log(tracked);
             if (tracked) {
                 //There is not an else since this method should only execute when an item has been added
                 for (let i = 0; i < tracked.trackedIngs.length; i++) {
                     if (tracked.trackedIngs[i] == ingredientID) {
                         tracked.trackedIngs.splice(i, 1); //Delete such element
+                        deleted = true;
                         break; // No need to keep going
                     }
                 }
@@ -139,8 +141,18 @@ export class Ingredient {
                 { $set: { trackedIngs: tracked.trackedIngs } },
                 (err, obj) => {
                     if (err) reject(err);
-                    console.log('Successfully deleted an ingredient');
-                    resolve(obj);
+                    if (deleted) {
+                        console.log('Successfully deleted an ingredient');
+                        resolve(obj);
+                    } else {
+                        console.log(
+                            'Item not deleted because either array is empty or id does not exists',
+                        );
+                        reject({
+                            message:
+                                'Item not deleted because either array is empty or id does not exists',
+                        });
+                    }
                 },
             );
         });
@@ -183,22 +195,42 @@ export class Ingredient {
     }
 
     /**
-     * Static method to retrieve the tracked ingredients id of a user
-     *
+     * Static method to retrieve ALL the tracked ingredients ID of a user.
+     * This method is called in Ingredients.js controller
+     * @param {*} dbConnection
+     * @param {*} dbCollection
      */
-    // static async getIngredientsIds(dbConnection, dbCollection) {
-    //     //Note this code is repeated from above
-    //     let obj = this;
-    //     let dbCol;
-    //     // first section, trying to get the db connection
-    //     try {
-    //         dbCol = await _openDbCollection(dbConnection, dbCollection);
-    //     } catch (err) {
-    //         console.log('Cannot connect to DB collection');
-    //         throw err; //Will error be handled by catch() at controller
-    //     }
-    //     return new Promise((resolve, reject) => {
-    //         dbCol.find();
-    //     });
-    // }
+    static async getAllIngredientsID(dbConnection, dbCollection) {
+        let dbCol;
+        // first section, trying to get the db connection
+        try {
+            dbCol = await _openDbCollection(dbConnection, dbCollection);
+        } catch (err) {
+            console.log('Cannot connect to DB collection');
+            throw err; //Will error be handled by catch() at controller
+        }
+
+        //Second section retrieves the trackedIDs array and returns it
+        return new Promise(function (resolve, reject) {
+            dbCol.findOne(
+                {
+                    trackedIngs: { $exists: true },
+                },
+                (err, obj) => {
+                    if (err) reject(err);
+                    if (obj.trackedIngs.length != 0) {
+                        console.log(
+                            'Successfully retrieved list of tracked ingredient ids',
+                        );
+                        resolve(obj);
+                    } else {
+                        console.log(
+                            'The array is empty. This operation should not happen!',
+                        );
+                        reject(obj);
+                    }
+                },
+            );
+        });
+    }
 }
