@@ -163,13 +163,21 @@ export class Ingredient {
         });
     }
     /**
+     * Handles POST requests to /ingredient/info
+     * NOTE: It can add an entirely new item or update
      * Static method that adds the ingredient info to the database based on its ID
      * Tested that it will not add if id is not there or if _id=0 was not created
      * @param {*} dbConnection
      * @param {*} dbCollection
      * @param {*} ingredientID
+     * @param {*} dataIngredient: array containing [name,correctPortion]
      */
-    static async addIngredientInfo(dbConnection, dbCollection, ingredientID) {
+    static async addUpdateIngredientInfo(
+        dbConnection,
+        dbCollection,
+        ingredientID,
+        dataIngredient,
+    ) {
         let dbCol;
         // first section, trying to get the db connection
         try {
@@ -208,7 +216,7 @@ export class Ingredient {
                 let addKey = ingredientID + '_data'; // Dynamically creating key; NOTE it cannot contain .
                 dbCol.updateOne(
                     { _id: 0 },
-                    { $set: { [addKey]: 'test1' } },
+                    { $set: { [addKey]: dataIngredient } },
                     (err, obj) => {
                         if (err) reject(err);
                         console.log('Ingredient data successfully added');

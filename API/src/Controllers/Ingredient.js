@@ -47,15 +47,23 @@ export const deleteIngredientID = (req, res) => {
 };
 /**
  * Handles POST requests to /ingredient/info
+ * This method can also update the tracked ingredient info.
  * Adds the info of a tracked ingredient to the database
- * @param {*} req
+ * @param {*} req.body.userID & req.body.ingredientData
  * @param {*} res
  */
-export const addIngredientInfo = (req, res) => {
+export const addUpdateIngredientInfo = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
+    let ingredientID = req.body.trackedIngID;
+    let ingredientData = req.body.ingredientData; // array containing [name,correctPortion]
     //Static method to add ingredient info
-    Ingredient.addIngredientInfo(req.db, collectionName, req.body.trackedIngID)
+    Ingredient.addUpdateIngredientInfo(
+        req.db,
+        collectionName,
+        ingredientID,
+        ingredientData,
+    )
         .then((result) => {
             res.status(202).send({
                 obj: result,
