@@ -1,5 +1,6 @@
 import { Ingredient } from '../Models/Ingredient.js';
 
+// // REQUESTS to /ingredient
 /**
  * Handles POST requests to /ingredient
  *  Adds an ingredient id to the list of tracked ingredients of a user
@@ -17,6 +18,30 @@ export const addIngredient = (req, res) => {
         })
         .catch((err) => {
             res.status(404).send({ obj: err, message: 'It failed to add ' });
+        });
+};
+
+/**
+ * Delete a tracked ingredient from the list of tracked ingredients
+ * @param {*} req.body.userid & req.body.trackedIngID & req.db
+ * @param {*} res.send()
+ */
+export const deleteIngredient = (req, res) => {
+    // DESIGN CHOICE: the db collection will be its own userid
+    let collectionName = req.body.userId;
+    //Static method to add ingredients id
+    Ingredient.deleteIngredientID(req.db, collectionName, req.body.trackedIngID)
+        .then((result) => {
+            res.status(202).send({
+                obj: result,
+                message: 'Ingredient Successfully deleted',
+            });
+        })
+        .catch((err) => {
+            res.status(404).send({
+                obj: err,
+                message: 'Failed to delete ingredient',
+            });
         });
 };
 

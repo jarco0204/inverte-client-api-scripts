@@ -94,6 +94,57 @@ export class Ingredient {
             );
         });
     }
+    /**
+     * Static method to delete a tracked ingredient
+     * @param {*} dbConnection
+     * @param {*} dbCollection
+     * @param {*} IngredientID
+     */
+    static async deleteIngredientID(dbConnection, dbCollection, ingredientID) {
+        let dbCol;
+        // first section, trying to get the db connection
+        try {
+            dbCol = await _openDbCollection(dbConnection, dbCollection);
+        } catch (err) {
+            console.log('Cannot connect to DB collection');
+            throw err; //Will error be handled by catch() at controller
+        }
+
+        // This section looks for the element and deletes it
+        let tracked;
+        try {
+            tracked = await dbCol.findOne({
+                trackedIngs: { $exists: true },
+            });
+            console.log(tracked);
+            if (tracked) {
+                //There is not an else since this method should only execute when an item has been added
+                for (let i = 0; i < tracked.trackedIngs.length; i++) {
+                    if (tracked.trackedIngs[i] == ingredientID) {
+                        tracked.trackedIngs.splice(i, 1); //Delete such element
+                        break; // No need to keep going
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(
+                'An error happened while retrieving the trackedIDs array',
+            );
+            throw err; //Will error be handled by catch() at controller
+        }
+        //Next section adds the modified array to the db
+        return new Promise(function (resolve, reject) {
+            dbCol.updateOne(
+                { _id: tracked._id },
+                { $set: { trackedIngs: tracked.trackedIngs } },
+                (err, obj) => {
+                    if (err) reject(err);
+                    console.log('Successfully deleted an ingredient');
+                    resolve(obj);
+                },
+            );
+        });
+    }
 
     /**
      * Adds the ingredient and weight data from the Class object to the db.
