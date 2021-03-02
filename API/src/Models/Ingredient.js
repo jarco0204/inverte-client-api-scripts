@@ -88,6 +88,7 @@ export class Ingredient {
     }
     /**
      * Static method to delete a tracked ingredientID
+     * Tested that it will not delete if id is not there or if _id=0 was not created
      * @param {*} dbConnection
      * @param {*} dbCollection
      * @param {*} IngredientID
@@ -128,29 +129,27 @@ export class Ingredient {
         }
         //Next section adds the modified array to the db
         return new Promise(function (resolve, reject) {
-            dbCol.updateOne(
-                { _id: tracked._id },
-                { $set: { trackedIngs: tracked.trackedIngs } },
-                (err, obj) => {
-                    if (err) reject(err);
-                    if (deleted) {
-                        console.log('Successfully deleted an ingredient');
+            if (deleted) {
+                dbCol.updateOne(
+                    { _id: tracked._id },
+                    { $set: { trackedIngs: tracked.trackedIngs } },
+                    (err, obj) => {
+                        if (err) reject(err);
+                        console.log('IngredientID was suceesfully deleted');
                         resolve(obj);
-                    } else {
-                        console.log(
-                            'Item not deleted because either array is empty or id does not exists',
-                        );
-                        reject({
-                            message:
-                                'Item not deleted because either array is empty or id does not exists',
-                        });
-                    }
-                },
-            );
+                    },
+                );
+            } else {
+                console.log(
+                    'No Id was deleted; either _id=0 does not exists or ingredientID is not there',
+                );
+                reject();
+            }
         });
     }
     /**
      * Static method that adds the ingredient info to the database based on its ID
+     * Tested that it will not add if id is not there or if _id=0 was not created
      * @param {*} dbConnection
      * @param {*} dbCollection
      * @param {*} ingredientID
