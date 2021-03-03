@@ -104,11 +104,11 @@ export const getIngredientInfo = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-export const updateCorrectPortion = (req, res) => {
+export const updateIngredientPortion = (req, res) => {
     let collectionName = req.body.userId;
     let ingredientID = req.body.trackedIngID;
     let portionWeight = req.body.newCorrectPortionWeight;
-    Ingredient.updateCorrectPortion(
+    Ingredient.updateIngredientPortion(
         req.db,
         collectionName,
         ingredientID,
@@ -124,6 +124,34 @@ export const updateCorrectPortion = (req, res) => {
             res.status(404).send({
                 obj: err,
                 message: 'Failed to update ingredient portion weight',
+            });
+        });
+};
+/**
+ * This method updates the name of a tracked ingredient
+ * @param {*} req
+ * @param {*} res
+ */
+export const updateIngredientName = (req, res) => {
+    let collectionName = req.body.userId;
+    let ingredientID = req.body.trackedIngID;
+    let newNameIngredient = req.body.newNameIngredient;
+    Ingredient.updateIngredientName(
+        req.db,
+        collectionName,
+        ingredientID,
+        newNameIngredient,
+    )
+        .then((result) => {
+            res.status(202).send({
+                obj: result,
+                message: 'Ingredient name was successfully updated',
+            });
+        })
+        .catch((err) => {
+            res.status(404).send({
+                obj: err,
+                message: 'Failed to update ingredient name',
             });
         });
 };

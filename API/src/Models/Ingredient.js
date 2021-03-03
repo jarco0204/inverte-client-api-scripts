@@ -280,7 +280,7 @@ export class Ingredient {
      * @param {*} newCorrectPortionWeight
      *
      */
-    static async updateCorrectPortion(
+    static async updateIngredientPortion(
         dbConnection,
         dbCollection,
         ingredientID,
@@ -326,6 +326,61 @@ export class Ingredient {
                 (err, obj) => {
                     if (err) reject(err);
                     console.log('Ingredient Portion successfully updated');
+                    resolve(obj);
+                },
+            );
+        });
+    }
+    /**
+     * Changes the name of an ingredient
+     * @param {*} dbConnection
+     * @param {*} dbCollection
+     */
+    static async updateIngredientName(
+        dbConnection,
+        dbCollection,
+        ingredientID,
+        newIngredientName,
+    ) {
+        // first section, trying to get the db connection
+        let dbCol;
+        dbCol = await openDbCollection(dbConnection, dbCollection);
+        // Next section retrieves the data document of each collection _id=0
+        let ingredientsData;
+        try {
+            ingredientsData = await dbCol.findOne({
+                _id: 0,
+            });
+        } catch (err) {
+            console.log(
+                'An error happened while retrieving the trackedIDs array',
+            );
+            throw err; //Will error be handled by catch() at controller
+        }
+        // console.log(ingredientsData);
+        // Next section gets the ingredient's data array | format of key is ingredientID+"_data"
+        let ingredientData;
+        let ingredientKey;
+        // Try/catch not detecting incorrect key
+        try {
+            ingredientKey = ingredientID + '_data';
+            ingredientData = ingredientsData[ingredientKey];
+        } catch (err) {
+            console.log('Incorrect key');
+            throw err;
+        }
+        //Next section updates the portion with the new one.
+        // DESIGN DECISION: ingredientData = [name, correctPortionWeight]
+        ingredientData[0] = newIngredientName;
+        // console.log(ingredientData);
+        //Return with a promise that updates the new ingredient data
+        return new Promise(function (resolve, reject) {
+            dbCol.updateOne(
+                { _id: 0 },
+                { $set: { [ingredientKey]: ingredientData } },
+                (err, obj) => {
+                    if (err) reject(err);
+                    console.log('Ingredient Name successfully updated');
                     resolve(obj);
                 },
             );
