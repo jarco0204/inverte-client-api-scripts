@@ -2,7 +2,7 @@ import express from 'express';
 import {
     addIngredientID,
     deleteIngredientID,
-    addUpdateIngredientInfo,
+    addIngredientInfo,
     getIngredientInfo,
     saveReadingToDB,
 } from '../Controllers/Ingredient.js';
@@ -23,10 +23,7 @@ ingredientRouter.route('/').post(addIngredientID).delete(deleteIngredientID);
  * GET the info associated with a tracked ingredientID
  * 🦾 Note you will need the UserID and IngredientID
  */
-ingredientRouter
-    .route('/info')
-    .post(addUpdateIngredientInfo)
-    .get(getIngredientInfo);
+ingredientRouter.route('/info').post(addIngredientInfo).get(getIngredientInfo);
 
 //POST the JSON object of artificial dataset
 ingredientRouter.route('/real-time').post(saveReadingToDB);

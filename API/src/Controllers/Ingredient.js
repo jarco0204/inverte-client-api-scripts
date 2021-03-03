@@ -52,13 +52,13 @@ export const deleteIngredientID = (req, res) => {
  * @param {*} req.body.userID & req.body.ingredientData
  * @param {*} res
  */
-export const addUpdateIngredientInfo = (req, res) => {
+export const addIngredientInfo = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userId;
     let ingredientID = req.body.trackedIngID;
     let ingredientData = req.body.ingredientData; // array containing [name,correctPortion]
     //Static method to add ingredient info
-    Ingredient.addUpdateIngredientInfo(
+    Ingredient.addIngredientInfo(
         req.db,
         collectionName,
         ingredientID,

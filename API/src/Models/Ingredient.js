@@ -167,7 +167,7 @@ export class Ingredient {
     }
     /**
      * Handles POST requests to /ingredient/info
-     * NOTE: It can add an entirely new item or update
+     * Adds the information array for the first time
      * Static method that adds the ingredient info to the database based on its ID
      * Tested that it will not add if id is not there or if _id=0 was not created
      * @param {*} dbConnection
@@ -175,7 +175,7 @@ export class Ingredient {
      * @param {*} ingredientID
      * @param {*} dataIngredient: array containing [name,correctPortion]
      */
-    static async addUpdateIngredientInfo(
+    static async addIngredientInfo(
         dbConnection,
         dbCollection,
         ingredientID,
@@ -193,7 +193,7 @@ export class Ingredient {
             });
             // console.log(tracked);
             if (trackedIDs) {
-                //There is not an else since this method should only execute when an id has been added
+                //There is not an else since this method should only execute after adding an ingredientID
                 for (let i = 0; i < trackedIDs.trackedIngs.length; i++) {
                     if (trackedIDs.trackedIngs[i] == ingredientID) {
                         found = true;
@@ -228,8 +228,11 @@ export class Ingredient {
     }
     /**
      * Handles GET requests to /ingredient/info
+     * Retrieves the data associated with that ingredientID
      * @param {*} dbConnection
      * @param {*} dbCollection
+     * @param {*} ingredientID
+     *
      */
     static async getIngredientInfo(dbConnection, dbCollection, ingredientID) {
         // first section, trying to get the db connection
@@ -245,14 +248,24 @@ export class Ingredient {
                 (err, obj) => {
                     if (err) reject(err);
                     try {
-                        //Need to check if the id exists or not
                         let dataKey = ingredientID + '_data'; // This is how data is added
-                        console.log(
-                            'Successfully retrieved individual ingredient data',
-                        );
-                        resolve(obj[dataKey]);
+
+                        if (obj[dataKey]) {
+                            console.log(
+                                'Successfully retrieved individual ingredient data',
+                            );
+                            resolve(obj[dataKey]);
+                        } else {
+                            console.log('IngredientID is not correct');
+                            reject({
+                                error:
+                                    'Either IngredientID is invalid or IngredientData has not been added',
+                            });
+                        }
                     } catch (err) {
-                        console.log('Invalid key in getIngredientInfo');
+                        console.log(
+                            'Internal server error when retrieving ingredient data',
+                        );
                         reject(err);
                     }
                 },
