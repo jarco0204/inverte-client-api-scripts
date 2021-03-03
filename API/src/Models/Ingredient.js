@@ -98,6 +98,7 @@ export class Ingredient {
     /**
      * Static method to delete a tracked ingredientID
      * Tested that it will not delete if id is not there or if _id=0 was not created
+     * NOTE: this method will also delete the ingredientData associated with that id inside _id=0
      * @param {*} dbConnection
      * @param {*} dbCollection
      * @param {*} IngredientID
@@ -121,6 +122,19 @@ export class Ingredient {
                     if (tracked.trackedIngs[i] == ingredientID) {
                         tracked.trackedIngs.splice(i, 1); //Delete such element
                         deleted = true;
+                        //This section deletes the ingredientData associated with that ingredientID
+                        try {
+                            let ingredientDataToRemove = ingredientID + '_data'; //this is how we add ingredientData
+                            await dbCol.updateOne(
+                                { _id: 0 },
+                                { $unset: { [ingredientDataToRemove]: true } },
+                            );
+                        } catch (err) {
+                            console.log(
+                                'Error while deleting the ingredientData',
+                            );
+                            throw err;
+                        }
                         break; // No need to keep going
                     }
                 }
@@ -131,7 +145,7 @@ export class Ingredient {
             );
             throw err; //Will error be handled by catch() at controller
         }
-        //Next section adds the modified array to the db
+        //Next section adds back the modified array to the db
         return new Promise(function (resolve, reject) {
             if (deleted) {
                 dbCol.updateOne(
