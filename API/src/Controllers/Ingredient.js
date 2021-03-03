@@ -1,6 +1,5 @@
 import { Ingredient } from '../Models/Ingredient.js';
 
-// // REQUESTS to /ingredient/
 /**
  * Handles POST requests to /ingredient/
  *  Adds an ingredient id to the list of tracked ingredients of a user
@@ -78,9 +77,10 @@ export const addIngredientInfo = (req, res) => {
         });
 };
 /**
- *
- * @param {*} req
- * @param {*} res
+ * Handles GET requests to /ingredient/info
+ * This method retrieves the data associated with an ingredientID.
+ * @param {*} req.body.userID & req.body.trackedIngID
+ * @param {*} res answers back
  */
 export const getIngredientInfo = (req, res) => {
     let collectionName = req.body.userId;
@@ -96,6 +96,34 @@ export const getIngredientInfo = (req, res) => {
             res.status(404).send({
                 obj: err,
                 message: 'Failed to get ingredient info',
+            });
+        });
+};
+/**
+ * Controller that handles put requests to /ingredient/info/portion
+ * @param {*} req
+ * @param {*} res
+ */
+export const updateCorrectPortion = (req, res) => {
+    let collectionName = req.body.userId;
+    let ingredientID = req.body.trackedIngID;
+    let portionWeight = req.body.newCorrectPortionWeight;
+    Ingredient.updateCorrectPortion(
+        req.db,
+        collectionName,
+        ingredientID,
+        portionWeight,
+    )
+        .then((result) => {
+            res.status(202).send({
+                obj: result,
+                message: 'Ingredient weight Successfully updated',
+            });
+        })
+        .catch((err) => {
+            res.status(404).send({
+                obj: err,
+                message: 'Failed to update ingredient portion weight',
             });
         });
 };

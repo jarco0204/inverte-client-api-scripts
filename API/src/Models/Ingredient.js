@@ -272,7 +272,65 @@ export class Ingredient {
             );
         });
     }
+    /**
+     * Update the portion of a tracked ingredient
+     * @param {*} dbConnection
+     * @param {*} dbCollection
+     * @param {*} ingredientID
+     * @param {*} newCorrectPortionWeight
+     *
+     */
+    static async updateCorrectPortion(
+        dbConnection,
+        dbCollection,
+        ingredientID,
+        newCorrectPortionWeight,
+    ) {
+        // first section, trying to get the db connection
+        let dbCol;
+        dbCol = await openDbCollection(dbConnection, dbCollection);
+        // Next section retrieves the data document of each collection _id=0
+        let ingredientsData;
+        try {
+            ingredientsData = await dbCol.findOne({
+                _id: 0,
+            });
+        } catch (err) {
+            console.log(
+                'An error happened while retrieving the trackedIDs array',
+            );
+            throw err; //Will error be handled by catch() at controller
+        }
+        // console.log(ingredientsData);
+        // Next section gets the ingredient's data array | format of key is ingredientID+"_data"
+        let ingredientData;
+        let ingredientKey;
+        // Try/catch not detecting incorrect key
+        try {
+            ingredientKey = ingredientID + '_data';
+            ingredientData = ingredientsData[ingredientKey];
+        } catch (err) {
+            console.log('Incorrect key');
+            throw err;
+        }
+        //Next section updates the portion with the new one.
+        // DESIGN DECISION: ingredientData = [name, correctPortionWeight]
+        ingredientData[1] = newCorrectPortionWeight;
+        // console.log(ingredientData);
 
+        //Return with a promise that updates the new ingredient data
+        return new Promise(function (resolve, reject) {
+            dbCol.updateOne(
+                { _id: 0 },
+                { $set: { [ingredientKey]: ingredientData } },
+                (err, obj) => {
+                    if (err) reject(err);
+                    console.log('Ingredient Portion successfully updated');
+                    resolve(obj);
+                },
+            );
+        });
+    }
     /**
      * Adds the ingredient and weight data from the Class object to the db.
      * First part connects to the collection. We have chosen to make each user its own collection.

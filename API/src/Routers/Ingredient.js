@@ -4,6 +4,7 @@ import {
     deleteIngredientID,
     addIngredientInfo,
     getIngredientInfo,
+    updateCorrectPortion,
     saveReadingToDB,
 } from '../Controllers/Ingredient.js';
 
@@ -19,11 +20,18 @@ ingredientRouter.route('/').post(addIngredientID).delete(deleteIngredientID);
 
 /**
  * REQUESTS to: /ingredient/info
- * POST or Update the info of a tracked ingredient
+ * POST the info of a tracked ingredient
  * GET the info associated with a tracked ingredientID
  * 🦾 Note you will need the UserID and IngredientID
  */
 ingredientRouter.route('/info').post(addIngredientInfo).get(getIngredientInfo);
+
+/**
+ * REQUESTS to /ingredient/info/portion
+ * PUT the updated portion
+ * 🦾 Note you will need the UserID and IngredientID
+ */
+ingredientRouter.route('/info/portion').put(updateCorrectPortion);
 
 //POST the JSON object of artificial dataset
 ingredientRouter.route('/real-time').post(saveReadingToDB);
