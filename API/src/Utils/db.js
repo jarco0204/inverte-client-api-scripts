@@ -11,7 +11,6 @@ let dbObj;
 export const connectToDB = async () => {
     // Connect the client to the server
     await mongodb.connect();
-    // Our db name is going to be contacts-db
     dbObj = mongodb.db('inverte-api-server');
     console.log('Connected successfully to mongoDB');
     return dbObj;

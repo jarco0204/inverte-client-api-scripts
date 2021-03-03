@@ -1,21 +1,24 @@
-### This project uses ES modules; the type in package.json contains "type": "module".
+### This project uses a monorepo strcture.
 
-## This project follows a mono-repo strcture.
+## The API is an express server that handles operations to the database. The Client is a react app that communicates with the mentioned API.
 
 • The root directory contains a node package that installs eslint and prettier.
 • API and Client directories are their own npm package.
 • Scripts directory contains the generated test data for this iterations
 
-# Root directory packages
+## Root directory packages
 
-• Axios for send request to API
+• ESLint for preventing compile errors.
+• Prettier to format our code.
+• Axios for script data to API
 
-# How to run the scripts
+## The Scripts directory
+
+# Creates and sends the artificial data that will be used by the API
+
+# Mimicks the expected data generated at restaurants when using InVerte's weighing scale
+
+# To run any of the scripts:
 
 1. cd Scripts
 2. node "nameOfScript".js
-
- <!--- Comment here: 
- If you already configure and added your require package for this project in package.json (which in this case already did, check package.json and you will see eslint and prettier is in the devDependencies). 
- Then you can inform the developers to run "npm install" in README.md. "npm install" will install all the requirement stated in package.json. So in this case, when I run "npm install", eslint and prettier will be installed, and I do not have to run 'npm i -D eslint'
-  'npm i prettier' one by one, npm install do all of it for me  --->

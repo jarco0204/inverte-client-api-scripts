@@ -29,21 +29,15 @@ export class Ingredient {
     }
     /**
      * This is a static function that adds the id of a tracked ingredient to the array of tracked ingredients.
-     * Consult with Dr.Soares some matters.
+     * Each User is going to be its own collection; and document with _id=0 contains the essential data to speed up queries
      * @param {*} dbConnection
      * @param {*} colName
      * @param {*} ingredientID
      */
     static async addIngredientID(dbConnection, colName, ingredientID) {
         let dbCol;
-        // first section, trying to get the db connection
-        // Consult if this try/catch is unnessary
-        try {
-            dbCol = await openDbCollection(dbConnection, colName);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+        dbCol = await openDbCollection(dbConnection, colName);
+
         // Second section, find if the array exists or not
         let tracked;
         let modified = true;
@@ -109,14 +103,9 @@ export class Ingredient {
      * @param {*} IngredientID
      */
     static async deleteIngredientID(dbConnection, dbCollection, ingredientID) {
+        // first section, trying to get the db collection
         let dbCol;
-        // first section, trying to get the db connection
-        try {
-            dbCol = await openDbCollection(dbConnection, dbCollection);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+        dbCol = await openDbCollection(dbConnection, dbCollection);
 
         // This section looks for the element and deletes it
         let tracked;
@@ -179,13 +168,7 @@ export class Ingredient {
         dataIngredient,
     ) {
         let dbCol;
-        // first section, trying to get the db connection
-        try {
-            dbCol = await openDbCollection(dbConnection, dbCollection);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+        dbCol = await openDbCollection(dbConnection, dbCollection);
 
         //Section that checks to see if ingredientID exists
         let trackedIDs;
@@ -235,14 +218,9 @@ export class Ingredient {
      * @param {*} dbCollection
      */
     static async getIngredientInfo(dbConnection, dbCollection, ingredientID) {
-        let dbCol;
         // first section, trying to get the db connection
-        try {
-            dbCol = await openDbCollection(dbConnection, dbCollection);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+        let dbCol;
+        dbCol = await openDbCollection(dbConnection, dbCollection);
 
         //Next section
         return new Promise(function (resolve, reject) {
@@ -278,13 +256,9 @@ export class Ingredient {
     async addWeightReadingDb(dbConnection, dbCollection) {
         let obj = this;
         let dbCol;
+        dbCol = await openDbCollection(dbConnection, dbCollection);
         // first section, trying to get the db connection
-        try {
-            dbCol = await openDbCollection(dbConnection, dbCollection);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+
         //Second section, adds a list of the tracked ingredients to faciliate GET requests
         // try {
         //     _addIngredientIDToList(dbCol, this.ingId);
@@ -309,14 +283,9 @@ export class Ingredient {
      * @param {*} dbCollection
      */
     static async getAllIngredientsID(dbConnection, dbCollection) {
-        let dbCol;
         // first section, trying to get the db connection
-        try {
-            dbCol = await openDbCollection(dbConnection, dbCollection);
-        } catch (err) {
-            console.log('Cannot connect to DB collection');
-            throw err; //Will error be handled by catch() at controller
-        }
+        let dbCol;
+        dbCol = await openDbCollection(dbConnection, dbCollection);
 
         //Second section retrieves the trackedIDs array and returns it
         return new Promise(function (resolve, reject) {
