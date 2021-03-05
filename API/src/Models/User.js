@@ -1,4 +1,5 @@
-import { openDbCollection, lookForImportantInfoDoc } from '../Utils/db.js';
+import { openDbCollection } from '../Utils/db.js';
+import { lookForImportantInfoDoc } from '../Utils/User.js';
 
 /**
  * User class handles the operations to the _id=0, which contains the most important information about a user's collection
