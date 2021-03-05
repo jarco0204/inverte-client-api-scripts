@@ -1,8 +1,7 @@
 import express from 'express';
 import ingredientRouter from './Routers/Ingredient.js';
-import ingredientsRouter from './Routers/Ingredients.js';
+import userRouter from './Routers/User.js';
 import { connectToDB, closeDBConnection } from './Utils/db.js';
-// import mongo from 'mongodb';
 
 //Instantiation of main app
 const app = express();
@@ -30,8 +29,8 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/api/user', userRouter);
 app.use('/ingredient', ingredientRouter);
-app.use('/ingredients', ingredientsRouter);
 
 // Properly Close the DB connection before closing the server
 process.on('SIGINT', () => {
