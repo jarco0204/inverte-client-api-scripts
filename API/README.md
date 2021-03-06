@@ -28,27 +28,35 @@
 
 # Document with \_id=0 inside a user's collection will contain objects that handle information about the weighing scales——number of scales bought, ingredient name, correct portion weight.
 
-• Some operations inside src/Models/Ingredient.js have a 'hardcoded' \_id=0 because it is a lot cleaner to have the most important data inside a specific document
+• Some operations inside src/Models/User.js have a 'hardcoded' \_id=0 because it is a lot cleaner to have the most important data inside a specific document
 
 ## MongoDb information
 
-# inverte-api-server is the name of the database.
+•inverte-api-server is the name of the database.
+•Each user is its own collection (refer to Design Decisions section)
+•Collection name is johanArcos_5680
 
-# Each user is its own collection (refer to Design Decisions section)
+### Routes and HTTP operations handled by the API
 
-## Routes and HTTP operations handled by the API
+## Main route api/user
 
-# /ingredient/
+# Subroutes:
 
-¶ Needs userID and ingredientID
-• POST: adds an ingredientID to document inside user's collection with \_id=0
-• DELETE: deletes the ingredientID
+•(POST) /create : creates a document with \_id=0 for the first time : needs userID
 
-# /ingredient/info
+•(POST,DELETE,GET) /weighingScale : Links a weighingScaleID—given to each physicalID manufactured—to the userID by adding it to array inside \_id=0: Needs userID and scaleID
 
-# /ingredient/real-time
+•(POST, GET) /weighingScale/data : links the weighingScale data to a weighingScaleID : needs userID, scaleID, and scaleData[name, correctPortion]
 
-# /ingredients/
+•(PUT) /weighingScale/data/name : updates the ingredient name that is being tracked : needs userID, scaleID, newName
+
+•(PUT) /weighingScale/data/portion : updates the ingredient correct portion that is being tracked by weighing scale: needs userID, scaleID, newPortion
+
+## api/ingredient
+
+# Subroutes:
+
+•(POST) /real-time : posts a weight reading to the user's collection. It mimics how a future web-socket will work: needs userID, weightReadingObject [see Client Generate Script]
 
 # How to run this package (assumes you are at root directory)
 
