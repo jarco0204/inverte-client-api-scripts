@@ -191,10 +191,10 @@ export const updateNameWeighingScaleData = (req, res) => {
 export const updatePortionWeighingScaleData = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userID;
-    let newName = req.body.newPortion;
+    let newPortion = req.body.newPortion;
 
     //Static method to update the weighing scale portion from a user's collection
-    User.updatePortionData(req.db, collectionName, req.body.scaleID, newName)
+    User.updatePortionData(req.db, collectionName, req.body.scaleID, newPortion)
         .then((result) => {
             res.status(202).send({
                 arrayOfScales: result,

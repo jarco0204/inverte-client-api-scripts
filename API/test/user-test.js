@@ -117,7 +117,7 @@ describe('Testing the User API', async () => {
                 });
 
             });
-            describe('Success 2 - POST /create; POST /weighingScale', () => {
+            describe('Success 2 - POST /weighingScale; DELETE /weighingScale;', () => {
                 it('POST /weighingScale', () => {
                     let data = {
                         userID: "johanArcos_5680",
@@ -133,9 +133,24 @@ describe('Testing the User API', async () => {
                         assert.strictEqual(JSON.parse(response.body).message, "Successfully linked the weighing scale to the user");
                     });
                 });
+                it('DELETE /weighingScale', () => {
+                    let data = {
+                        userID: "johanArcos_5680",
+                        scaleID: 1
+                    }
+                    // should add the weighingScale to user's collection using POST
+                    request.delete({
+                        headers: { 'content-type': 'application/json' },
+                        url: userUrl + "/weighingScale",
+                        body: JSON.stringify(data)
+                    }, (error, response, body) => {
+                        assert.strictEqual(response.statusCode, 202);
+                        assert.strictEqual(JSON.parse(response.body).message, "Successfully deleted the weighing scale");
+                    });
+                });
             });
 
-            describe('Success 3 - POST /weighingScale 2nd; POST /weighingScale/data; GET /weighingScale;', () => {
+            describe('Success 3 - POST /weighingScale 2nd; GET /weighingScale;', () => {
                 it('POST /weighingScale 2nd', () => {
                     let data = {
                         userID: "johanArcos_5680",
@@ -149,22 +164,6 @@ describe('Testing the User API', async () => {
                     }, (error, response, body) => {
                         assert.strictEqual(response.statusCode, 202);
                         assert.strictEqual(JSON.parse(response.body).message, "Successfully linked the weighing scale to the user");
-                    });
-                });
-                it('POST /weighingScale/data', () => {
-                    let data = {
-                        userID: "johanArcos_5680",
-                        scaleID: 2,
-                        scaleData: "222"
-                    }
-                    // should add the weighingScale to user's collection using POST
-                    request.post({
-                        headers: { 'content-type': 'application/json' },
-                        url: userUrl + "/weighingScale/data",
-                        body: JSON.stringify(data)
-                    }, (error, response, body) => {
-                        assert.strictEqual(response.statusCode, 202);
-                        assert.strictEqual(JSON.parse(response.body).message, "Successfully added the weighing scale data for the first time");
                     });
                 });
                 it('GET /weighingScale', () => {
@@ -182,194 +181,76 @@ describe('Testing the User API', async () => {
                     });
                 });
             });
-
+            describe('Success 4 - POST /weighingScale/data; GET /weighingScale/data', () => {
+                it('POST /weighingScale/data', () => {
+                    let data = {
+                        userID: "johanArcos_5680",
+                        scaleID: 2,
+                        scaleData: ["cheese", "200"]
+                    }
+                    // should add the weighingScale to user's collection using POST
+                    request.post({
+                        headers: { 'content-type': 'application/json' },
+                        url: userUrl + "/weighingScale/data",
+                        body: JSON.stringify(data)
+                    }, (error, response, body) => {
+                        assert.strictEqual(response.statusCode, 202);
+                        assert.strictEqual(JSON.parse(response.body).message, "Successfully added the weighing scale data for the first time");
+                    });
+                });
+                it('GET /weighingScale/data', () => {
+                    let data = {
+                        userID: "johanArcos_5680",
+                        scaleID: 2
+                    }
+                    // should add the weighingScale to user's collection using POST
+                    request.get({
+                        headers: { 'content-type': 'application/json' },
+                        url: userUrl + "/weighingScale/data",
+                        body: JSON.stringify(data)
+                    }, (error, response, body) => {
+                        assert.strictEqual(response.statusCode, 202);
+                        assert.strictEqual(JSON.parse(response.body).message, "Successfully retrieved the weighing scale data");
+                    });
+                });
+            });
+            describe('Success 5 - PUT /weighingScale/data/name;', () => {
+                it('PUT /weighingScale/data/name', () => {
+                    let data = {
+                        userID: "johanArcos_5680",
+                        scaleID: 2,
+                        newName: "newNAME"
+                    }
+                    // should add the weighingScale to user's collection using POST
+                    request.put({
+                        headers: { 'content-type': 'application/json' },
+                        url: userUrl + "/weighingScale/data/name",
+                        body: JSON.stringify(data)
+                    }, (error, response, body) => {
+                        assert.strictEqual(response.statusCode, 202);
+                        assert.strictEqual(JSON.parse(response.body).message, "Successfully updated the weighing scale ingredient name");
+                    });
+                });
+            });
+            describe('Success 6 - PUT /weighingScale/data/portion;', () => {
+                it('PUT /weighingScale/data/portion', () => {
+                    let data = {
+                        userID: "johanArcos_5680",
+                        scaleID: 2,
+                        newPortion: "300"
+                    }
+                    // should add the weighingScale to user's collection using POST
+                    request.put({
+                        headers: { 'content-type': 'application/json' },
+                        url: userUrl + "/weighingScale/data/portion",
+                        body: JSON.stringify(data)
+                    }, (error, response, body) => {
+                        assert.strictEqual(response.statusCode, 202);
+                        assert.strictEqual(JSON.parse(response.body).message, "Successfully updated the weighing scale ingredient portion");
+                    });
+                });
+            });
         });
-
     });
-    /*  beforeEach(async () => {
-         const books = db.collection("books");
-         books.drop();
-       }); 
 
-describe('Testing the Book API - Complex Cases', () => {
-describe('Contacts', () => {
-   var myurl = 'http://localhost:3000/books';
-   let data = {
-       id: 1,
-       name: "Harry",
-       authors: "JK",
-       year: 2010,
-       publisher: "Nort"
-   }
-   describe('Success 1 - POST /books, DELETE /books/:id', () => {
-       it('POST /books', () => {
-           // should create a new book using POST
-           request.post({
-               headers: { 'content-type': 'application/json' },
-               url: myurl,
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully saved in the database"}');
-           });
-       })
-       it('DELETE /books/:id', () => {
-           //then DELETE the same book
-           request.delete({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully deleted"}');
-           });
-       })
-   });
-
-   describe('Success 2 - POST /books, GET /books (retrieval greater than 1), DELETE /book/:id', () => {
-       it('POST /books', () => {
-           // should create a new book using POST
-           request.post({
-               headers: { 'content-type': 'application/json' },
-               url: myurl,
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully saved in the database"}');
-           });
-       })
-       it('GET /books (retrieval greater than 1', () => {
-           request.get({
-               headers: { 'content-type': 'application/json' },
-               url: myurl
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"obj":{"_id":1,"name":"Harry","authors":"JK","year":2010,"publisher":"Nort"},"msg":"Book was successfully retrieved from the database"}');
-           });
-       })
-       it('DELETE /books/:id', () => {
-           //then DELETE the same book
-           request.delete({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully deleted"}');
-           });
-       })
-   });
-
-   describe('Success 3 - POST /books, GET /books/:id, DELETE /book/:id', () => {
-      //    You should guarantee (using assert) that your book was created, 
-      // then that the fields of the retrieved book with GET are all the same, and then it was deleted. 
-
-       // should create a new book using POST
-       it('POST /books', () => {
-           request.post({
-               headers: { 'content-type': 'application/json' },
-               url: myurl,
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully saved in the database"}');
-           });
-       })
-
-       //query this book by id using a GET request
-       it('GET /books/:id', () => {
-           request.get({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1"
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"obj":{"_id":1,"name":"Harry","authors":"JK","year":2010,"publisher":"Nort"},"msg":"Book was successfully retrieved from the database"}');
-           });
-       })
-
-       it('DELETE /books/:id', () => {
-           //then DELETE the same book
-           request.delete({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully deleted"}');
-           });
-       })
-   });
-
-   describe('Success 4 - POST /books, PUT /books/:id, GET /books/:id, DELETE /book/:id', () => {
-       // should create a new book using POST
-       it('POST /books', () => {
-           request.post({
-               headers: { 'content-type': 'application/json' },
-               url: myurl,
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully saved in the database"}');
-           });
-       })
-
-       //query this book by id using a GET request
-       it('GET /books/:id', () => {
-           request.get({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1"
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"obj":{"_id":1,"name":"Harry","authors":"JK","year":2010,"publisher":"Nort"},"msg":"Book was successfully retrieved from the database"}');
-           });
-       })
-
-       //modify the data of this book with PUT
-       it('PUT /books/:id', () => {
-           let data2 = {
-               id: 1,
-               name: "Tim",
-               authors: "JK",
-               year: 2010,
-               publisher: "Nort"
-           }
-           request.put({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data2)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"Book successfully updated in the database"}');
-           });
-       })
-
-       //then query this book by id using a GET request
-       it('GET /books/:id', () => {
-           request.get({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1"
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"obj":{"_id":1,"name":"Tim","authors":"JK","year":2010,"publisher":"Nort"},"msg":"Book was successfully retrieved from the database"}');
-           });
-       })
-       it('DELETE /books/:id', () => {
-           //then DELETE the same book
-           request.delete({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"The book was successfully deleted"}');
-           });
-       })
-   })
-
-   describe('Success 5 - POST /books, POST /books (another book added), PUT /books/:id, GET /books/:id, DELETE /books/:id (first book), DELETE /books/:id (2nd book)', () => {
-
-   });
-
-   describe('Success 6 - DELETE /books/:id', () => {
-
-       it('DELETE /books/:id', () => {
-           //then DELETE the same book
-           request.delete({
-               headers: { 'content-type': 'application/json' },
-               url: myurl + "/1",
-               body: JSON.stringify(data)
-           }, (error, response, body) => {
-               assert.strictEqual(body, '{"msg":"No book is deleted. The database is empty"}');
-           });
-       })
-   });
-});
-}); */
 });
