@@ -64,5 +64,17 @@
 2. npm run dev (make sure you are using node version 14 or above)
 
 # To run the test
-make sure you had create a collection manually
+
+1. first open a terminal
+2. locate to your /inverte-client-server folder 
+3. cd API (locate to your /API folder)
+4. run `mongo`
+in mongo run: 
+> use inverte-api-server
 > db.createCollection('johanArcos_5680')
+
+5. open a new terminal
+6. `npm run dev` (make sure you are using node version 14 or above)
+
+7. open a new terminal
+8. `npm test`

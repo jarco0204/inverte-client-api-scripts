@@ -34,8 +34,6 @@ after(async () => {
 describe('Testing the User API', async () => {
     describe('Testing the User Model - Simple cases', () => {
 
-
-
         it('Pass 1 - Test success creation of an important information doc for the user', async () => {
             let commandRes = await User.createImportantInfoDoc(db, userCollectName);
             // test if collection correctly inserted the _id:0
