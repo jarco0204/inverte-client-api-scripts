@@ -21,4 +21,4 @@
 # To run any of the scripts:
 
 1. cd Scripts
-2. node "nameOfScript".js
+2. node "nameOfScript".js or node --experimental-modules app.js      

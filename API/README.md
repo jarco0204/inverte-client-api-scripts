@@ -60,5 +60,9 @@
 
 # How to run this package (assumes you are at root directory)
 
-1. Cd API
-2. npm run dev
+1. cd API
+2. npm run dev (make sure you are using node version 14 or above)
+
+# To run the test
+make sure you had create a collection manually
+> db.createCollection('johanArcos_5680')

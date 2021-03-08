@@ -26,6 +26,15 @@ export const openDbCollection = async (db, collectionName) => {
     }
 };
 
+export const createDbCollection = async (db, collectionName) => {
+    try {
+        return await db.createCollection(collectionName);
+    } catch (err) {
+        console.log('Error occurred when creating the db collection');
+        throw err;
+    }
+};
+
 /**
  * Closes the db connection opened by connectToDB.
  * Function called in App.js when server is closed.
@@ -33,3 +42,4 @@ export const openDbCollection = async (db, collectionName) => {
 export const closeDBConnection = async () => {
     await mongodb.close();
 };
+

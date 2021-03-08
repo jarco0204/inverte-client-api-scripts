@@ -8,7 +8,6 @@ import { User } from '../Models/User.js';
 export const createImportantInfoDoc = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userID;
-
     //Static method to create _id=0 to a user's collection
     User.createImportantInfoDoc(req.db, collectionName)
         .then((result) => {
@@ -33,7 +32,6 @@ export const createImportantInfoDoc = (req, res) => {
 export const addWeighingScale = (req, res) => {
     // DESIGN CHOICE: the db collection will be its own userid
     let collectionName = req.body.userID;
-
     //Static method to link a weighingScaleID to a user's collection
     User.addWeighingScaleID(req.db, collectionName, req.body.scaleID)
         .then((result) => {
