@@ -16,7 +16,7 @@ const userRouter = express.Router(); // Handles all routes starting with /api/us
  * Creates the doc with _id=0 for a user's collection
  * Must be called before any other operation
  */
-userRouter.route('/create').post(createImportantInfoDoc);
+userRouter.route('/create').post(createImportantInfoDoc); 
 
 /**
  * Requests to /api/user/weighingScale
@@ -25,9 +25,9 @@ userRouter.route('/create').post(createImportantInfoDoc);
  */
 userRouter
     .route('/weighingScale')
-    .post(addWeighingScale)
-    .get(getAllWeighingScales)
-    .delete(deleteWeighingScale);
+    .post(addWeighingScale) 
+    .get(getAllWeighingScales) 
+    .delete(deleteWeighingScale); 
 
 /**
  * Requests to /api/user/weighingScale/data
@@ -36,14 +36,14 @@ userRouter
  */
 userRouter
     .route('/weighingScale/data')
-    .post(addWeighingScaleData)
-    .get(getWeighingScaleData);
+    .post(addWeighingScaleData) 
+    .get(getWeighingScaleData); 
 
 /**
  * Requests to /api/user/weighingScale/data/name
  * PUT the updated name of the tracked ingredient
  */
-userRouter.route('/weighingScale/data/name').put(updateNameWeighingScaleData);
+userRouter.route('/weighingScale/data/name').put(updateNameWeighingScaleData); 
 
 /**
  * Requests to /api/user/weighingScale/data/portion

@@ -203,7 +203,7 @@ export class User {
 
         let found;
         for (let i = 0; i < infoDoc.trackedScalesIDs.length; i++) {
-            if (infoDoc.trackedScalesIDs[i] == scaleID) {
+            if (infoDoc.trackedScalesIDs[i] === scaleID) {
                 found = true;
                 break; // No need to keep going
             }
