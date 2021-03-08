@@ -30,12 +30,14 @@ const prepareData = () => {
             accuracy = '++';
         }
         tempObj.push({
-            ingId: 'CH01',
+            weighingScaleID: 'subway_1',
+            name: 'cheese',
             weight: initialWeight,
             time: createTime(i),
-            userId: 'johanArcos_5680',
+            userID: 'johanArcos_5680',
             weightFluc: fluct,
             accuracyWeight: accuracy,
+            order: i,
         });
         initialWeight -= fluct; // All are perfect portions
         cheeseData['cheese'] = tempObj; // new weight after employee grabs some
