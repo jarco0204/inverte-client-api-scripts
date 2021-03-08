@@ -133,6 +133,7 @@ describe('Testing the User API', async () => {
                         assert.strictEqual(JSON.parse(response.body).message, "Successfully linked the weighing scale to the user");
                     });
                 });
+                // should delete the weighingScale with scaleID1 for the specify user's collection using DELETE
                 it('DELETE /weighingScale', () => {
                     let data = {
                         userID: "johanArcos_5680",
@@ -156,7 +157,7 @@ describe('Testing the User API', async () => {
                         userID: "johanArcos_5680",
                         scaleID: 2
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should add 2nd weighingScale to user's collection using POST
                     request.post({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale",
@@ -170,7 +171,7 @@ describe('Testing the User API', async () => {
                     let data = {
                         userID: "johanArcos_5680"
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should get the weighingScale to user's collection using GET
                     request.get({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale",
@@ -188,7 +189,7 @@ describe('Testing the User API', async () => {
                         scaleID: 2,
                         scaleData: ["cheese", "200"]
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should add the weighingScale data to user's collection using POST
                     request.post({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale/data",
@@ -203,7 +204,7 @@ describe('Testing the User API', async () => {
                         userID: "johanArcos_5680",
                         scaleID: 2
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should get the weighingScale data from user's collection using GET
                     request.get({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale/data",
@@ -221,7 +222,7 @@ describe('Testing the User API', async () => {
                         scaleID: 2,
                         newName: "newNAME"
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should set a new name for the weighingScale data using PUT
                     request.put({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale/data/name",
@@ -239,7 +240,7 @@ describe('Testing the User API', async () => {
                         scaleID: 2,
                         newPortion: "300"
                     }
-                    // should add the weighingScale to user's collection using POST
+                    // should set the weighingScale portion to specific scale ID using PUTs
                     request.put({
                         headers: { 'content-type': 'application/json' },
                         url: userUrl + "/weighingScale/data/portion",
