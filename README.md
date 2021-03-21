@@ -21,4 +21,8 @@
 # To run any of the scripts:
 
 1. cd Scripts
-2. node "nameOfScript".js or node --experimental-modules app.js      
+2. node "nameOfScript".js or node --experimental-modules app.js
+
+# Help setting eslintrc
+
+https://joelmasters.medium.com/setting-up-eslint-for-nextjs-37163d4cabaa

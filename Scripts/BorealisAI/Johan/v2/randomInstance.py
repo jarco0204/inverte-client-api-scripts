@@ -1,5 +1,5 @@
 import datetime
-import random
+
 import numpy as np
 """
 In an effort to make the artificial data more realistic, we have decided to add a new class called PlateOrder
@@ -9,10 +9,7 @@ In an effort to make the artificial data more realistic, we have decided to add 
 start_date = datetime.datetime(2020, 1, 1, 9, 30, 0)
 end_date = datetime.datetime(2020, 12, 31, 23, 59, 59)
 closing_restaurant_time = datetime.time(21, 30, 0)
-plateNames = {0: "chicken-bacon", 1: "stake-cheese",
-              2: "SO-chicken-teriyaki", 3: "meatball", 4: "tuna"}  # assume that they are bought in same frequency
-vegetablesNames = {0: "avocado", 1: "tomatoes",
-                   2: "olives", 3: "green-peppers"}
+
 
 # ----------------------- Start functions ------------
 """
