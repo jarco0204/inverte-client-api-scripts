@@ -1,0 +1,3 @@
+[submodule "inverte-api"]
+	path = inverte-api
+	url = https://github.com/jarco0204/inverte-api.git
