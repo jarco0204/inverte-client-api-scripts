@@ -3,6 +3,8 @@
 ## Three main areas of development {api, client, scripts}
 Each item is its own git module <=> Submodule structure
 
+## Important: Commit to the individual git submodule!
+
 ## Cloning the repository, does not clone the content of the Git submodule.
 Use : git submodule update --init --recursive : to pull the latest repo.
 
