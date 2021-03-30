@@ -1,28 +1,35 @@
-### This project uses a monorepo strcture.
+### InVerte Q1 Dev
 
-## The API is an express server that handles operations to the database. The Client is a react app that communicates with the mentioned API.
+## Three main areas of development {api, client, scripts}
+Each item is its own git module <=> Submodule structure
 
-• The root directory contains a node package that installs eslint and prettier.
-• API and Client directories are their own npm package.
-• Scripts directory contains the generated test data for this iterations
+## Important: Commit to the individual git submodule!
 
-## Root directory packages
+## Cloning the repository, does not clone the content of the Git submodule.
+Use : git submodule update --init --recursive : to pull the latest repo.
 
-• ESLint for preventing compile errors.
-• Prettier to format our code.
-• Axios for script data to API
+# After it is pulled, just update it constantly.
+Use: git submodule update --remote --merge : to update a git submodule.
+# For more specific update, fetch new submodule commits
+Use:  cd name_of_submodule & git fetch
+Then: git log --oneline origin/master -3
+Finally: git checkout -q commit# & git add
 
-## The Scripts directory
+## inverte-api repo
 
-# Creates and sends the artificial data that will be used by the API
+# Express-powered server using MVC paradigm
 
-# Mimicks the expected data generated at restaurants when using InVerte's weighing scale
+# How to run?
+1) npm install
+2) npm run dev
 
-# To run any of the scripts:
 
-1. cd Scripts
-2. node "nameOfScript".js or node --experimental-modules app.js
+## inverte-react-client repo
+React-powered web app. 
+Requires that the inverte-api service is running.
 
-# Help setting eslintrc
+# How to run?
+1) npm install
+2) npm run start
 
-https://joelmasters.medium.com/setting-up-eslint-for-nextjs-37163d4cabaa
+

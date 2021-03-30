@@ -1,0 +1,9 @@
+[submodule "inverte-api"]
+	path = inverte-api
+	url = https://github.com/jarco0204/inverte-api.git
+[submodule "inverte-react-client"]
+	path = inverte-react-client
+	url = https://github.com/jarco0204/inverte-react-client.git
+[submodule "inverte-scripts"]
+	path = inverte-scripts
+	url = https://github.com/jarco0204/inverte-scripts.git
