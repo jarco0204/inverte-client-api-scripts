@@ -15,13 +15,21 @@ Use:  cd name_of_submodule & git fetch
 Then: git log --oneline origin/master -3
 Finally: git checkout -q commit# & git add
 
-## inverte-api
+## inverte-api repo
 
 # Express-powered server using MVC paradigm
 
-# Routes Served:
+# How to run?
+1) npm install
+2) npm run dev
 
-## inverte-react-client
+
+## inverte-react-client repo
 React-powered web app. 
+Requires that the inverte-api service is running.
+
+# How to run?
+1) npm install
+2) npm run start
 
 
